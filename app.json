@@ -1,14 +1,13 @@
 {
   "expo": {
-    "name": "weather-lens",
-    "slug": "weather-lens",
+    "name": "WeatherApp",
+    "slug": "WeatherApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "cover"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -18,14 +17,13 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.weather.lens"
+      "bundleIdentifier": "com.weather.forecast"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/icon.png"
       },
-      "package": "com.weather.lens",
+      "package": "com.weather.forecast",
       "versionCode": 1
     },
     "web": {

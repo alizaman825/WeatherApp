@@ -1,62 +1,112 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { colors } from '../../utils/index';
-import { FontAwesome5, MaterialCommunityIcons} from '@expo/vector-icons';
-
+import Sun from '../../assets/sun.png'
 const { PRIMARY_COLOR, SECONDARY_COLOR, BORDER_COLOR } = colors;
 
 const WeatherDetails = ({ currentWeather, unitsSystem }) => {
+  console.log(currentWeather)
   const {
     main: { feels_like, humidity, pressure },
-    wind: { speed }
+    wind: { speed },
+    sys :{sunrise,sunset,country}
+   
   } = currentWeather;
+
+  const { 
+    weather: [details],
+} = currentWeather;
+const {icon,main,description} = details
+
+const iconUrl = `https://openweathermap.org/img/wn/${icon}@4x.png`
 
   const windSpeed = unitsSystem === 'metric' ? `${Math.round(speed)} m/s` : `${Math.round(speed)} miles/h`;
   return (
-    <View style={styles.weatherDetails}>
-      {/* First Line */}
-      <View style={styles.weatherDetailsRow}>
-        <View style={{...styles.weatherDetailsBox, borderRightWidth: 1, borderRightColor: BORDER_COLOR}}>
-          <View style={styles.weatherDetailsRow}>
-            <FontAwesome5 name='temperature-low' size={25} color={PRIMARY_COLOR}></FontAwesome5>
-            <View style={styles.weatherDetailsItems}>
-              <Text>Feels like: </Text>
-              <Text style={styles.textSecondary}>{feels_like}°</Text>
-            </View>
+    <View>
+      <View 
+      style={{ width:'95%',
+      borderRadius:10,
+      backgroundColor:'#7187FD',
+      opacity:1,
+      marginTop:50,
+      alignSelf:"center",
+      marginBottom:50}}
+      >
+          <View>
+            <Text style={{color:'white',fontSize:25,paddingLeft:20,paddingTop:20,fontWeight:"bold",}}>
+              Details
+            </Text>
+          </View>
+          <View style={{flexDirection:'row',justifyContent:'space-between',width:"97%"}}>
+          <View style={{alignSelf:'center'}}>
+          <Image style = {{width:170,height:180,tintColor:"white",}}  source ={{uri : iconUrl}} />
+          </View>
+          <View style={{flexDirection:'column'}}>     
+             
+            <View style={{flexDirection:'row',paddingTop:30,justifyContent:"space-around"}}>
+          <Text style={{color:'white',padding:5,fontSize:14}}>Feels like: </Text>
+              <Text style={{color:"white",padding:6}}>{Math.round(feels_like)}°C</Text>
+          </View>
+          
+  
+          <View style={{flexDirection:'row',paddingTop:20,}}>
+          <Text style={{color:"white",padding:5,fontSize:14,}}>Humidity: </Text>
+              <Text style={{color:'white',padding:6}}>{humidity}%</Text>
+          </View>
+        
+          <View style={{flexDirection:'row',paddingTop:20,justifyContent:'space-around'}}>
+          <Text style={{color:"white",paddingTop:5,paddingLeft:5,fontSize:14}}>Wind Speed: </Text>
+              <Text style={{color:'white',paddingTop:6}}>{windSpeed}</Text>
+          </View>
+        
+           <View style={{flexDirection:'row',paddingTop:20,paddingBottom:30,justifyContent:'space-around'}}>
+           <Text style={{color:"white",fontSize:14,paddingTop:5,paddingLeft:5}}>Pressure: </Text>
+              <Text style={{color:"white",paddingTop:6}}>{pressure} hPa</Text>
+           </View>
+          </View>
+          
+          </View>
+          <View style={{width:'97%'}}>
+            <Text style={{fontSize:16,fontWeight:'200',color:'white',padding:20}}>
+            Today - {main}. Winds from SW to SSW at {speed} mph . The overnight low will be {Math.round(feels_like)} ° C
+            </Text>
+          </View>
+</View>
+         <View style={{ width:'95%',
+      borderRadius:10,
+      backgroundColor:'#7187FD',
+      opacity:1,
+      marginTop:20,
+      alignSelf:"center",
+      marginBottom:50,
+      
+      }}>
+        <View>
+          <Text  style={{color:'white',fontSize:25,paddingLeft:20,paddingTop:20,fontWeight:"bold",}}>Sun & Moon</Text>
+        </View>
+        <View style={{display:"flex",flexDirection:"row",justifyContent:"space-around",marginTop:50,marginBottom:30}}>
+          <View>
+          <Text style={{fontSize:16,fontWeight:'200',color:"white",paddingTop:20}}>
+            {new Date(sunrise*1000).toLocaleTimeString()}
+          </Text>
+          <Text style={{fontSize:16,fontWeight:'200',color:"white",paddingTop:10}}>
+            Sunrise
+          </Text>
+          </View>
+          <Image source={Sun} />
+          <View style={{flexDirection:'column'}}>
+          <Text style={{fontSize:16,fontWeight:'200',color:"white",paddingTop:20}}>
+            {new Date(sunset*1000).toLocaleTimeString()}
+          </Text>
+          <Text style={{fontSize:16,fontWeight:'200',color:"white",paddingTop:10}}>
+            Sunset
+          </Text>
           </View>
         </View>
-        <View style={styles.weatherDetailsBox}>
-          <View style={styles.weatherDetailsRow}>
-            <FontAwesome5 name='water' size={30} color={PRIMARY_COLOR}></FontAwesome5>
-            <View style={styles.weatherDetailsItems}>
-              <Text>Humidity: </Text>
-              <Text style={styles.textSecondary}>{humidity}%</Text>
-            </View>
-          </View>
-        </View>
-      </View>
+         </View>
 
-      {/* Second Line */}
-      <View style={{...styles.weatherDetailsRow, borderTopWidth: 1, borderTopColor: BORDER_COLOR}}>
-        <View style={{...styles.weatherDetailsBox, borderRightWidth: 1, borderRightColor: BORDER_COLOR}}>
-          <View style={styles.weatherDetailsRow}>
-            <MaterialCommunityIcons name='weather-windy' size={30} color={PRIMARY_COLOR}></MaterialCommunityIcons>
-            <View style={styles.weatherDetailsItems}>
-              <Text>Wind Speed: </Text>
-              <Text style={styles.textSecondary}>{windSpeed}</Text>
-            </View>
-          </View>
-        </View>
-        <View style={styles.weatherDetailsBox}>
-          <View style={styles.weatherDetailsRow}>
-            <MaterialCommunityIcons name='speedometer' size={30} color={PRIMARY_COLOR}></MaterialCommunityIcons>
-            <View style={styles.weatherDetailsItems}>
-              <Text>Pressure: </Text>
-              <Text style={styles.textSecondary}>{pressure} hPa</Text>
-            </View>
-          </View>
-        </View>
-      </View>
+
+
     </View>
   );
 }
@@ -66,11 +116,8 @@ export default WeatherDetails;
 // Styles
 const styles = StyleSheet.create({
   weatherDetails: {
-    marginTop: 'auto',
-    margin: 15,
-    borderWidth: 1,
-    borderColor: BORDER_COLOR,
-    borderRadius: 10,
+  
+
   },
   weatherDetailsRow: {
     flexDirection: 'row',

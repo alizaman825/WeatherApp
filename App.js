@@ -1,104 +1,96 @@
-import { StatusBar } from 'expo-status-bar'
-import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
-import * as Location from 'expo-location'
-import ReloadIcon from './components/ReloadIcon/ReloadIcon'
-import UnitsPicker from './components/UnitsPicker/UnitsPicker'
-import WeatherDetails from './components/WeatherDetails/WeatherDetails'
-import WeatherInfo from './components/WeatherInfo/WeatherInfo'
-import { colors } from './utils/index'
+import React, { useContext, useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  useWindowDimensions,
+  Button,
+  ScrollView,
+  Image,
+} from 'react-native';
+import { NavigationContainer , DarkTheme } from '@react-navigation/native';
+import { Feather } from '@expo/vector-icons';
+import { createStackNavigator } from '@react-navigation/stack';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from '@react-navigation/drawer';
 
-// API Key
-const API_KEY = 'b381267e48a3a93fbd3768730eb8ae1d'
-const URL = 'https://api.openweathermap.org/data/2.5/weather?'
+
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+
+
+import Current from './components/hourlyForecast/Forecast';
+import CityWise from './components/search/CityWise';
+import Carousel from './components/Slider/screens/Slider';
+import CurrentLocation from './CurrentLocation';
+
+
+const Drawer = createDrawerNavigator();
+
+const Stack = createStackNavigator();
+
+
+function CustomDrawerContent(props) {
+  
+  return (
+    <DrawerContentScrollView {...props}>
+      <View >
+        
+      </View>
+    </DrawerContentScrollView>
+  );
+}
+
+function MyDrawer({ navigation }) {
+  return (
+    <>
+      <Drawer.Navigator >
+        <Drawer.Screen name="Home" component={Carousel}  />
+        <Drawer.Screen name="Current Location" component={CurrentLocation} />
+        <Drawer.Screen name="Search By City" component={CityWise} />
+      </Drawer.Navigator>
+    </>
+  );
+}
 
 export default function App() {
-
-  const [location, setLocation] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [currentWeather, setCurrentWeather] = useState(null)
-  const [unitsSystem, setUnitsSystem] = useState('metric')
- 
-
-  useEffect(() => {
-    load()
-  }, [unitsSystem])
-
-  const load = async () => {
-    setCurrentWeather(null)
-    setErrorMessage(null)
-    try {
-      let { status } = await Location.requestForegroundPermissionsAsync()
-      if (status !== 'granted') {
-        setErrorMessage("Need access to the location in order to run the App")
-        return
-      }
-      const location = await Location.getCurrentPositionAsync()
-      setLocation(location)
-      const { latitude, longitude } = location.coords
-      const weatherUrl = `${URL}lat=${latitude}&lon=${longitude}&units=${unitsSystem}&appid=${API_KEY}`
-
-      const response = await fetch(weatherUrl)
-
-      const result = await response.json()
-
-      // alert(`Latitude is ${latitude} and Longitude is ${longitude}`)
-      if (response.ok) {
-        setCurrentWeather(result)
-      } else {
-        setErrorMessage(result.message)
-      }
-    } catch (error) {
-      setErrorMessage(error.message)
-    }
-  }
-  // return code part
-  if (currentWeather) {
-    return (
-      <View style={styles.container}>
-        <StatusBar style="auto" />
-        <View style={styles.main}>
-          <UnitsPicker unitsSystem={unitsSystem} setUnitsSystem={setUnitsSystem} />
-          <ReloadIcon load={load} />
-          <WeatherInfo currentWeather={currentWeather} />
-        </View>
-        <WeatherDetails currentWeather={currentWeather} unitsSystem={unitsSystem} />
-      </View>
-    )
-  } else if (errorMessage) {
-    return (
-      <View style={styles.container}>
-        <ReloadIcon load={load} />
-        <Text style={{ textAlign: 'center' }}>{errorMessage}</Text>
-        <StatusBar style="auto" />
-      </View>
-    )
-  } else {
-    return (
-      <View style={styles.container}>
-        <View style={{textAlign: 'center', alignItems: 'center'}}>
-          <Text style={styles.titleText}>Weather Lens</Text>
-        </View>
-        <ActivityIndicator size="large" color={colors.PRIMARY_COLOR} />
-        <StatusBar style="auto" />
-      </View>
-    )
-  }
+  
+  return (
+    
+    <NavigationContainer >
+      <MyDrawer />
+    </NavigationContainer>
+    
+  );
 }
+
+ 
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+   
     justifyContent: 'center',
+    alignItems: 'center',
   },
-  main: {
-    justifyContent: 'center',
-    flex: 1,
+  menuContainer: {
+   
   },
-  titleText: {
-    fontSize: 30,
-    fontWeight: "bold",
-    color: colors.PRIMARY_COLOR,
-    paddingBottom: 20,
+  menuItemsCard: {
+   
+    marginTop:50,
+    marginLeft:50,
+    borderRadius: 10,
+  },
+  circleContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    padding: 10,
+    marginTop:40,
   },
 });
+
